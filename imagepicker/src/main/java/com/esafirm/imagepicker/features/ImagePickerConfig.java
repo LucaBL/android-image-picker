@@ -23,6 +23,7 @@ public class ImagePickerConfig implements Parcelable {
 
     private boolean folderMode;
     private boolean showCamera;
+    private boolean facebookSource;
     private boolean returnAfterFirst;
 
     private ImageLoader imageLoader;
@@ -92,6 +93,14 @@ public class ImagePickerConfig implements Parcelable {
 
     public void setFolderMode(boolean folderMode) {
         this.folderMode = folderMode;
+    }
+
+    public boolean isFacebookSource() {
+        return facebookSource;
+    }
+
+    public void setFacebookSource(boolean facebookSource) {
+        this.facebookSource = facebookSource;
     }
 
     public ImagePickerSavePath getImageDirectory() {

@@ -124,6 +124,11 @@ public abstract class ImagePicker {
         return this;
     }
 
+    public ImagePicker facebookSource(boolean facebookSource) {
+        config.setFacebookSource(facebookSource);
+        return this;
+    }
+
     public ImagePicker imageDirectory(String directory) {
         config.setImageDirectory(directory);
         return this;

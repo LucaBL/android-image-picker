@@ -32,39 +32,73 @@ class ImagePickerPresenter extends BasePresenter<ImagePickerView> {
         imageLoader.abortLoadImages();
     }
 
-    void loadImages(boolean isFolderMode) {
+    void loadImages(boolean isFolderMode, boolean facebookSource) {
         if (!isViewAttached()) return;
 
         getView().showLoading(true);
-        imageLoader.loadDeviceImages(isFolderMode, new ImageLoaderListener() {
-            @Override
-            public void onImageLoaded(final List<Image> images, final List<Folder> folders) {
-                handler.post(() -> {
-                    if (isViewAttached()) {
-                        getView().showFetchCompleted(images, folders);
+        if(!facebookSource) {
+            imageLoader.loadDeviceImages(isFolderMode, new ImageLoaderListener() {
+                @Override
+                public void onImageLoaded(final List<Image> images, final List<Folder> folders) {
+                    handler.post(() -> {
+                        if (isViewAttached()) {
+                            getView().showFetchCompleted(images, folders);
 
-                        final boolean isEmpty = folders != null
-                                ? folders.isEmpty()
-                                : images.isEmpty();
+                            final boolean isEmpty = folders != null
+                                    ? folders.isEmpty()
+                                    : images.isEmpty();
 
-                        if (isEmpty) {
-                            getView().showEmpty();
-                        } else {
-                            getView().showLoading(false);
+                            if (isEmpty) {
+                                getView().showEmpty();
+                            } else {
+                                getView().showLoading(false);
+                            }
                         }
-                    }
-                });
-            }
+                    });
+                }
 
-            @Override
-            public void onFailed(final Throwable throwable) {
-                handler.post(() -> {
-                    if (isViewAttached()) {
-                        getView().showError(throwable);
-                    }
-                });
-            }
-        });
+                @Override
+                public void onFailed(final Throwable throwable) {
+                    handler.post(() -> {
+                        if (isViewAttached()) {
+                            getView().showError(throwable);
+                        }
+                    });
+                }
+            });
+        }
+        else {
+
+            imageLoader.loadFacebookImages(isFolderMode, new ImageLoaderListener() {
+                @Override
+                public void onImageLoaded(final List<Image> images, final List<Folder> folders) {
+                    handler.post(() -> {
+                        if (isViewAttached()) {
+                            getView().showFetchCompleted(images, folders);
+
+                            final boolean isEmpty = folders != null
+                                    ? folders.isEmpty()
+                                    : images.isEmpty();
+
+                            if (isEmpty) {
+                                getView().showEmpty();
+                            } else {
+                                getView().showLoading(false);
+                            }
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailed(final Throwable throwable) {
+                    handler.post(() -> {
+                        if (isViewAttached()) {
+                            getView().showError(throwable);
+                        }
+                    });
+                }
+            });
+        }
     }
 
     void onDoneSelectImages(List<Image> selectedImages) {
